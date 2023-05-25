@@ -1,2 +1,0 @@
-# constants here
-ATESTCONST = "somevalue"
