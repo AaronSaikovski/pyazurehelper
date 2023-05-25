@@ -4,15 +4,18 @@ Python SDK
 #import json
 import os
 import os.path
-#import sys
 
 from azure.identity import AzureCliCredential
 from azure.mgmt.resource import ResourceManagementClient
-#from azure.mgmt.resource.resources.models import DeploymentMode
 
 import pyazurehelper.az_login as az_login
 import pyazurehelper.az_subscription as az_sub
 import utils.console_helper as console_helper
+
+#import sys
+
+#from azure.mgmt.resource.resources.models import DeploymentMode
+
 
 
 class Deploy:
