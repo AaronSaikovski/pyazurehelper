@@ -1,5 +1,6 @@
-"""Deploys Azure resources using the Azure 
-Python SDK 
+"""
+Deploys Azure resources using the 
+Azure Python SDK 
 """
 #import json
 import os
