@@ -4,9 +4,9 @@
 
 A Python project template to save you time and energy.
 
-[![Build Status](https://github.com/AaronSaikovski/pystarter/workflows/build/badge.svg)](https://github.com/AaronSaikovski/pystarter/actions)
-[![Coverage Status](https://coveralls.io/repos/github/AaronSaikovski/pystarter/badge.svg?branch=main)](https://coveralls.io/github/AaronSaikovski/pystarter?branch=main)
-[![Licence](https://img.shields.io/github/license/AaronSaikovski/pystarter)](LICENSE)
+[![Build Status](https://github.com/AaronSaikovski/pyazurehelper/workflows/build/badge.svg)](https://github.com/AaronSaikovski/pyazurehelper/actions)
+[![Coverage Status](https://coveralls.io/repos/github/AaronSaikovski/pyazurehelper/badge.svg?branch=main)](https://coveralls.io/github/AaronSaikovski/pyazurehelper?branch=main)
+[![Licence](https://img.shields.io/github/license/AaronSaikovski/pyazurehelper)](LICENSE)
 
 
 </div>
