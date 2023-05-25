@@ -6,6 +6,7 @@ from azure.cli.core import get_default_cli
 import pyazurehelper.az_subscription as az_sub
 import utils.console_helper as console_helper
 
+# ******************************************************************************** #
 
 def check_azure_login(subscription_id: str) -> None:
     """
@@ -48,3 +49,5 @@ def check_azure_login(subscription_id: str) -> None:
                            subscription_id])
     else:
         console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
+
+# ******************************************************************************** #

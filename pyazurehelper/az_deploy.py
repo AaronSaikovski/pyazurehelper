@@ -17,13 +17,13 @@ import utils.console_helper as console_helper
 
 #from azure.mgmt.resource.resources.models import DeploymentMode
 
-
-
 class Deploy:
-    '''
+    """
     Main deployment class - Deploys Azure resources
     Perform the deployment of Azure resources
-    '''
+    """
+
+    # ******************************************************************************** #
 
     def __init__(self, 
                  subscription_id: str, 
@@ -51,6 +51,8 @@ class Deploy:
         else:
             console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
             #sys.exit(-1)
+            
+    # ******************************************************************************** #
 
     def deploy_resource_group(self) -> None:
         """Deploys a new Azure resource group
@@ -62,6 +64,8 @@ class Deploy:
             self.resource_group_name, {"location": self.location}
         )
         print(rg_result)
+
+    # ******************************************************************************** #
 
     def deploy_resource_template(self, 
                                  template_path: str,
@@ -106,6 +110,8 @@ class Deploy:
         else:
             console_helper.print_error_message(f"##ERROR - {template_path} not found>!")
             #sys.exit(-1)
+
+    # ******************************************************************************** #
 
     def destroy_resource_group(self) -> None:
         """Destroys the Azure resource group
