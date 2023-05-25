@@ -5,10 +5,6 @@
 import argparse
 
 import pyazurehelper.az_deploy as az_deploy
-import utils.console_helper as console_helper
-
-# Custom modules
-import utils.logging_helper as logging_helper
 
 
 def main() -> None:
@@ -29,17 +25,26 @@ def main() -> None:
 
     # add Args
     parser = argparse.ArgumentParser(description=help_msg)
-    parser.add_argument('--SubscriptionId', '-sub', required=True, help='Subscription Id.')
-    parser.add_argument('--ResourceGroup', '-rsg', required=True, help='Resource Group.')
-    parser.add_argument('--Location', '-loc', required=True, help='Target Location/Region.')
-    parser.add_argument('--Environment', '-env', required=False, help='Environment.')
+    parser.add_argument('--SubscriptionId',
+                        '-sub', 
+                        required=True,
+                        help='Subscription Id.')
+    parser.add_argument('--ResourceGroup',
+                        '-rsg', 
+                        required=True,
+                        help='Resource Group.')
+    parser.add_argument('--Location',
+                        '-loc',
+                        required=True,
+                        help='Target Location/Region.')
+    #parser.add_argument('--Environment', '-env', required=False, help='Environment.')
     args = parser.parse_args()
 
     # set values from command line
     subscription_id = args.SubscriptionId
     resource_group_name = args.ResourceGroup
     location = args.Location
-    environment = args.Environment
+    #environment = args.Environment
 
     # # get the environment variables from the .env file.
     # template_parameters = {
