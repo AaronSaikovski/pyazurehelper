@@ -8,6 +8,7 @@ import utils.console_helper as console_helper
 
 # ******************************************************************************** #
 
+
 def check_azure_login(subscription_id: str) -> None:
     """
     Checks to see if we are logged into the AzureCLI.
@@ -29,25 +30,22 @@ def check_azure_login(subscription_id: str) -> None:
         az_cli = get_default_cli()
 
         # Get subscription info if logged in
-        account_response = az_cli.invoke(['account', 
-                                          'show', 
-                                          '--subscription', 
-                                          subscription_id])
+        account_response = az_cli.invoke(
+            ["account", "show", "--subscription", subscription_id]
+        )
         if account_response == 0:
-            subscription_name: str = az_cli.result.result['name']
+            subscription_name: str = az_cli.result.result["name"]
             # pylint: disable=line-too-long
             console_helper.print_confirmation_message(
                 f"Deploying: '{subscription_name}' with Id: '{subscription_id}'"
             )
         else:
             # pylint: disable=line-too-long
-            console_helper.print_warning_message('Logging in to Azure CLI.')
-            az_cli.invoke(['login'])
-            az_cli.invoke(['account', 
-                           'set', 
-                           '--subscription',
-                           subscription_id])
+            console_helper.print_warning_message("Logging in to Azure CLI.")
+            az_cli.invoke(["login"])
+            az_cli.invoke(["account", "set", "--subscription", subscription_id])
     else:
         console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
+
 
 # ******************************************************************************** #

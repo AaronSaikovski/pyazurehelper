@@ -2,20 +2,20 @@
 Deploys Azure resources using the 
 Azure Python SDK 
 """
-#import json
+import json
 import os
-import os.path
+from datetime import datetime
 
 from azure.identity import AzureCliCredential
 from azure.mgmt.resource import ResourceManagementClient
+from azure.mgmt.resource.resources.models import DeploymentMode
 
 import pyazurehelper.az_login as az_login
 import pyazurehelper.az_subscription as az_sub
 import utils.console_helper as console_helper
 
-#import sys
+# import os.path
 
-#from azure.mgmt.resource.resources.models import DeploymentMode
 
 class Deploy:
     """
@@ -25,10 +25,9 @@ class Deploy:
 
     # ******************************************************************************** #
 
-    def __init__(self, 
-                 subscription_id: str, 
-                 resource_group_name: str, 
-                 location: str) -> None:
+    def __init__(
+        self, subscription_id: str, resource_group_name: str, location: str
+    ) -> None:
         """Init function."""
         # Acquire a credential object using CLI-based authentication.
         azure_cli_credential = AzureCliCredential()
@@ -45,13 +44,12 @@ class Deploy:
             az_login.check_azure_login(self.subscription_id)
 
             # Obtain the management object for resources.
-            self.resource_client = ResourceManagementClient(self.credentials, 
-                                                            self.subscription_id)
-            # print(f"logged in")
+            self.resource_client = ResourceManagementClient(
+                self.credentials, self.subscription_id
+            )
         else:
             console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
-            #sys.exit(-1)
-            
+
     # ******************************************************************************** #
 
     def deploy_resource_group(self) -> None:
@@ -61,19 +59,20 @@ class Deploy:
         None - Taken from class constructor.
         """
         rg_result = self.resource_client.resource_groups.create_or_update(
-            self.resource_group_name, {"location": self.location}
+            self.resource_group_name, {"location": self.location}  # type: ignore
         )
-        print(rg_result)
 
     # ******************************************************************************** #
 
-    def deploy_resource_template(self, 
-                                 template_path: str,
-                                 template_parameters: dict) -> None:
+    def deploy_resource_template(
+        self, template_file: str, template_params_file: str
+    ) -> None:
         """Deploys a template to the resource group
         Parameters
         ----------
-        taken from class constructor
+        template_file - ARM or Bicep file
+        template_params: - Template params file as string
+        deployment_name: - Deployment Name
 
         Returns
         -------
@@ -81,35 +80,60 @@ class Deploy:
             Displays output status of the Resource group deployment.
         """
 
-        # check the file path exists
-        if os.path.isfile(template_path):
-            pass
-            # build properties
-            # deployment_properties = {
-            #     'mode': DeploymentMode.INCREMENTAL,
-            #     'template': template_path,
-            #     'parameters': template_parameters,
-            # }
+        ## ref: https://github.com/p-prakash/serverless-url-shortener-azure/blob/main/deploy.py
+        ## https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/resources/azure-mgmt-resource/tests/test_mgmt_resource.py
+        ## https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-python
+        ## https://learn.microsoft.com/en-us/python/api/azure-core/azure.core.polling.lropoller?view=azure-python
 
-            # str_temp = json.dumps(deployment_properties)
-            # print(deployment_properties)
+        # generate a random deployment name
+        today = datetime.now().strftime("%m-%d-%Y")
+        deployment_name = f"pydeploy{today}"
+
+        # check the file path exists
+        if os.path.isfile(template_file):
+            # convert the template string to json
+            json_template = self.__read_file_data(template_file)
+
+            # Load the param file as a string
+            json_params = self.__read_file_data(template_params_file)
+
+            # build properties
+            deployment_params = {
+                "mode": DeploymentMode.INCREMENTAL,
+                "template": json_template,
+                "parameters": json_params,
+            }
 
             # Do the deployment
-            # template_result = self.resource_client.deployments.begin_create_or_update(
-            #     self.resource_group_name,
-            #     'azure-sample',
-            #     deployment_properties
-            # )
+            deploy_result = self.resource_client.deployments.begin_create_or_update(
+                self.resource_group_name,
+                deployment_name,
+                {"properties": deployment_params},  # type: ignore
+            )
 
-            # template_result = self.resource_client.deployments.begin_create_or_update(
-            #     self.resource_group_name, 
-            # 'azure-sample', 
-            # {'parameters': json.dumps(template_parameters)}
-            # )
+            # print the result
+            print(f"Deployment result - {deploy_result.result()}")
 
         else:
-            console_helper.print_error_message(f"##ERROR - {template_path} not found>!")
-            #sys.exit(-1)
+            console_helper.print_error_message(f"##ERROR - {template_file} not found>!")
+
+    # ******************************************************************************** #
+
+    def __read_file_data(self, file_name: str) -> str:
+        """
+        Opens a given parameters file and returns a JSON string
+        """
+        # file_content: str = None  # type: ignore
+        json_data: str
+
+        if os.path.isfile(file_name):
+            with open(file_name, "r") as file:
+                # str_file_content = file.readlines()  # type: ignore
+                json_data = json.load(file)
+
+            return json_data
+        else:
+            return None  # type: ignore
 
     # ******************************************************************************** #
 

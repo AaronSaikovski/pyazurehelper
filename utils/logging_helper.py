@@ -10,11 +10,12 @@ logger = logging.getLogger()
 
 # ******************************************************************************** #
 
+
 def log(func):
-    '''
+    """
     Logging decorator
     source: https://ankitbko.github.io/blog/2021/04/logging-in-python/
-    '''
+    """
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
@@ -31,6 +32,7 @@ def log(func):
             raise ex
 
     return wrapper
+
 
 # ******************************************************************************** #
 

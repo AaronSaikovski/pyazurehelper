@@ -3,8 +3,10 @@
 """
 
 import argparse
+import sys
 
 import pyazurehelper.az_deploy as az_deploy
+import utils.console_helper as console_helper
 
 
 def main() -> None:
@@ -14,6 +16,22 @@ def main() -> None:
     -------
     None
     """
+
+    # ******************************************************************************** #
+
+    # Check if we are running in a virtual environment
+    if sys.prefix == sys.base_prefix:
+        console_helper.print_error_message("** This is not a virtual environment! **")
+        console_helper.print_command_message(
+            "Run the following command to create a virtual environment"
+        )
+        console_helper.print_command_message("'make create'")
+        console_helper.print_command_message(
+            "This will create and activate a virtual environment using the Makefile"
+        )
+        sys.exit()
+
+    # ******************************************************************************** #
 
     # help message string
     # pylint: disable=line-too-long
@@ -25,45 +43,42 @@ def main() -> None:
 
     # add Args
     parser = argparse.ArgumentParser(description=help_msg)
-    parser.add_argument('--SubscriptionId',
-                        '-sub', 
-                        required=True,
-                        help='Subscription Id.')
-    parser.add_argument('--ResourceGroup',
-                        '-rsg', 
-                        required=True,
-                        help='Resource Group.')
-    parser.add_argument('--Location',
-                        '-loc',
-                        required=True,
-                        help='Target Location/Region.')
-    #parser.add_argument('--Environment', '-env', required=False, help='Environment.')
+    parser.add_argument(
+        "--SubscriptionId", "-sub", required=True, help="Subscription Id."
+    )
+    parser.add_argument(
+        "--ResourceGroup", "-rsg", required=True, help="Resource Group."
+    )
+    parser.add_argument(
+        "--Location", "-loc", required=True, help="Target Location/Region."
+    )
+    parser.add_argument(
+        "--template", "-temp", required=True, help="Resource Template file."
+    )
+    parser.add_argument(
+        "--params", "-params", required=False, help="Resource Template Parameters file."
+    )
+    # parser.add_argument('--Environment', '-env', required=False, help='Environment.')
     args = parser.parse_args()
+
+    # ******************************************************************************** #
 
     # set values from command line
     subscription_id = args.SubscriptionId
     resource_group_name = args.ResourceGroup
     location = args.Location
-    #environment = args.Environment
-
-    # # get the environment variables from the .env file.
-    # template_parameters = {
-    #     'environment': {'value': environment},
-    #     'location': {'value': location},
-    #     'resource_group_name': {'value': resource_group_name},
-    # }
+    template_file = args.template
+    params_file = args.params
 
     # Call the deploy class
     deploy = az_deploy.Deploy(subscription_id, resource_group_name, location)
     deploy.deploy_resource_group()
-    # deploy.deploy_resource_template("main.bicep", template_parameters)
-    # deploy.destroy_resource_group()
 
-    # do the deployment
-    # azdeploy.deploy_template(az_cli,
-    #                 "main.bicep",
-    #                 location,
-    #                 template_parameters)
+    # deploy template
+    ##deploy.deploy_resource_template(template_file, params_file)
+    deploy.destroy_resource_group()
+
+    # ******************************************************************************** #
 
 
 # Main check
