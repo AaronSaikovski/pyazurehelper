@@ -8,24 +8,19 @@ A Python project template to save you time and energy.
 [![Coverage Status](https://coveralls.io/repos/github/AaronSaikovski/pyazurehelper/badge.svg?branch=main)](https://coveralls.io/github/AaronSaikovski/pyazurehelper?branch=main)
 [![Licence](https://img.shields.io/github/license/AaronSaikovski/pyazurehelper)](LICENSE)
 
-
 </div>
 Python projects take a long time to setup with all the various files, the virtual environment, and keeping things uniform across projects. With this Python template, you can quickly setup boilerplate code and miscellaneous items for your Python project saving you time and energy so you can get back to coding.
-
-## Install
-
-Click the [Use this template](https://github.com/AaronSaikovski/pystarter/generate) button at the top of this project's GitHub page to get started.
 
 ## Usage
 
 ### Easy text replacements
 
 1. Replace all instances of `package_name` with the name of your project
-    * These are the Python snake_case references (eg: `package_name`)
+   - These are the Python snake_case references (eg: `package_name`)
 2. Replace all instances of `PROJECT_NAME_URL` with the name of your project
-    * These are the references to your project that will appear in URLs and are typically hyphenated (eg: `project-name`)
+   - These are the references to your project that will appear in URLs and are typically hyphenated (eg: `project-name`)
 3. Replace all instances of `USERNAME` with the name of the author or owner of the project
-    * These are references typically found in the URL of your project as it appears on GitHub
+   - These are references typically found in the URL of your project as it appears on GitHub
 
 ### File configuration
 
@@ -43,4 +38,4 @@ Click the [Use this template](https://github.com/AaronSaikovski/pystarter/genera
 
 ## Attribution
 
-* from here: https://github.com/Justintime50/python-template
+- from here: https://github.com/Justintime50/python-template
