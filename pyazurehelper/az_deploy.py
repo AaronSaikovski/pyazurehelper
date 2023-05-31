@@ -14,8 +14,6 @@ import pyazurehelper.az_login as az_login
 import pyazurehelper.az_subscription as az_sub
 import utils.console_helper as console_helper
 
-# import os.path
-
 
 class Deploy:
     """
@@ -122,15 +120,12 @@ class Deploy:
     def __read_file_data(self, file_name: str) -> str:
         """
         Opens a given parameters file and returns a JSON string
-        """
-        # file_content: str = None  # type: ignore
+        """       
         json_data: str
 
         if os.path.isfile(file_name):
             with open(file_name, "r") as file:
-                # str_file_content = file.readlines()  # type: ignore
                 json_data = json.load(file)
-
             return json_data
         else:
             return None  # type: ignore

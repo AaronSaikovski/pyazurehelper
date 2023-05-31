@@ -1,19 +1,13 @@
-# Example of TODO.md
-
-This is an example of TODO.md
-
-View the raw content of this file to understand the format.
+# PyAzureHelper To DO
 
 ### Todo
 
-- [ ] Work on the website ~3d #feat @john 2020-03-20  
-- [ ] Fix the homepage ~1d #bug @jane  
-  - [ ] Sub-task or description  
+- [ ] update readme
+- [ ] fix parameters file so it can read standard params json file
+- [ ] add ability to take .bicep file and convert to json for passing to API
 
 ### In Progress
 
-- [ ] Work on Github Repo [JIRA-345]  
-
 ### Done ✓
 
-- [x] Create my first TODO.md  
+- [x] Create my first TODO.md
