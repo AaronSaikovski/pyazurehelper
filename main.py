@@ -75,8 +75,8 @@ def main() -> None:
     deploy.deploy_resource_group()
 
     # deploy template
-    ##deploy.deploy_resource_template(template_file, params_file)
-    deploy.destroy_resource_group()
+    deploy.deploy_resource_template(template_file, params_file)
+    # deploy.destroy_resource_group()
 
     # ******************************************************************************** #
 

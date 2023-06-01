@@ -29,7 +29,7 @@ run: activate
 
 ## clean - Cleans the environment
 clean:
-	rm -rf __pycache__
+	find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 	rm -rf .venv
 	rm -rf venv
 	rm -rf .pytest_cache

@@ -4,6 +4,7 @@ Azure Python SDK
 """
 import json
 import os
+import time
 from datetime import datetime
 
 from azure.identity import AzureCliCredential
@@ -83,23 +84,28 @@ class Deploy:
         ## https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-python
         ## https://learn.microsoft.com/en-us/python/api/azure-core/azure.core.polling.lropoller?view=azure-python
 
-        # generate a random deployment name
-        today = datetime.now().strftime("%m-%d-%Y")
+        # generate a random deployment name - YY-MM-DD
+        today = datetime.now().strftime("%Y-%m-%d")
         deployment_name = f"pydeploy{today}"
 
         # check the file path exists
         if os.path.isfile(template_file):
+            console_helper.print_command_message("**Deploying template **")
+
             # convert the template string to json
             json_template = self.__read_file_data(template_file)
 
             # Load the param file as a string
             json_params = self.__read_file_data(template_params_file)
 
+            # Get the params from the dict using a get()
+            extracted_params = json_params.get("parameters")
+
             # build properties
             deployment_params = {
                 "mode": DeploymentMode.INCREMENTAL,
                 "template": json_template,
-                "parameters": json_params,
+                "parameters": extracted_params,
             }
 
             # Do the deployment
@@ -109,6 +115,14 @@ class Deploy:
                 {"properties": deployment_params},  # type: ignore
             )
 
+            # get the status for the deployment
+            console_helper.print_command_message("**Deployment started **")
+            deployment_status = deploy_result.status()
+            while deployment_status == "InProgress":
+                console_helper.print_command_message("Deployment in progress..")
+                deployment_status = deploy_result.status()
+                time.sleep(3)
+
             # print the result
             print(f"Deployment result - {deploy_result.result()}")
 
@@ -117,11 +131,11 @@ class Deploy:
 
     # ******************************************************************************** #
 
-    def __read_file_data(self, file_name: str) -> str:
+    def __read_file_data(self, file_name: str) -> dict:
         """
         Opens a given parameters file and returns a JSON string
         """
-        json_data: str
+        json_data: dict
 
         if os.path.isfile(file_name):
             with open(file_name, "r") as file:
