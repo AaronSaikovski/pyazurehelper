@@ -7,6 +7,7 @@ import os
 import time
 from datetime import datetime
 
+from azure.core.polling import LROPoller
 from azure.identity import AzureCliCredential
 from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.resource.resources.models import DeploymentMode
@@ -37,6 +38,28 @@ class Deploy:
         self.resource_group_name = resource_group_name
         self.location = location
 
+        # Do login
+        self.__do_login()
+        # # Check if SubscriptionID is valid
+        # if az_sub.check_valid_subscription_id(self.subscription_id):
+        #     # Do login if not already
+        #     az_login.check_azure_login(self.subscription_id)
+
+        #     # Obtain the management object for resources.
+        #     self.resource_client = ResourceManagementClient(
+        #         self.credentials, self.subscription_id
+        #     )
+        # else:
+        #     console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
+
+    # ******************************************************************************** #
+
+    def __do_login(self) -> None:
+        """Logs in using the CLI
+        Parameters
+        ----------
+        None - Taken from class constructor.
+        """
         # Check if SubscriptionID is valid
         if az_sub.check_valid_subscription_id(self.subscription_id):
             # Do login if not already
@@ -63,8 +86,80 @@ class Deploy:
 
     # ******************************************************************************** #
 
+    def __deployment_params(self, template_data: dict, parameter_data: str) -> dict:
+        """creates a new deployment params dict
+        Parameters
+        ----------
+        template_data: template payload
+        parameter_data: template parameters
+        """
+        return {
+            "mode": DeploymentMode.INCREMENTAL,
+            "template": template_data,
+            "parameters": parameter_data,
+        }
+
+    # ******************************************************************************** #
+
+    def __deploy_resources(
+        self, resource_group_name: str, deployment_name: str, deployment_params: dict
+    ) -> LROPoller:
+        """do the deployment and return a status message
+        Parameters
+        ----------
+        template_data: template payload
+        parameter_data: template parameters
+        """
+        deploy_result: LROPoller
+        deploy_result = self.resource_client.deployments.begin_create_or_update(
+            self.resource_group_name,
+            deployment_name,
+            {"properties": deployment_params},  # type: ignore
+        )
+
+        return deploy_result
+
+    # ******************************************************************************** #
+
+    def __do_resource_deployment(
+        self, deployment_name: str, deployment_params: dict
+    ) -> None:
+        """do the deployment and print a status message
+        Parameters
+        ----------
+        template_data: template payload
+        parameter_data: template parameters
+        """
+        # # Do the deployment
+        # deploy_result = self.resource_client.deployments.begin_create_or_update(
+        #     self.resource_group_name,
+        #     deployment_name,
+        #     {"properties": deployment_params},  # type: ignore
+        # )
+
+        # Do the deployment and get a result
+        deploy_result = self.__deploy_resources(
+            self.resource_group_name, deployment_name, deployment_params
+        )
+
+        # get the status for the deployment
+        console_helper.print_command_message("**Deployment started **")
+        deployment_status = deploy_result.status()
+        while deployment_status == "InProgress":
+            console_helper.print_command_message("Deployment in progress..")
+            deployment_status = deploy_result.status()
+            time.sleep(3)
+
+        # print the result
+        print(f"Deployment result - {deploy_result.result()}")
+
+    # ******************************************************************************** #
+
     def deploy_resource_template(
-        self, template_file: str, template_params_file: str
+        self,
+        template_file: str,
+        template_params_file: str,
+        deploy_prefix: str = "pydeploy",
     ) -> None:
         """Deploys a template to the resource group
         Parameters
@@ -86,7 +181,7 @@ class Deploy:
 
         # generate a random deployment name - YY-MM-DD
         today = datetime.now().strftime("%Y-%m-%d")
-        deployment_name = f"pydeploy{today}"
+        deployment_name = f"{deploy_prefix}{today}"
 
         # check the file path exists
         if os.path.isfile(template_file):
@@ -99,32 +194,33 @@ class Deploy:
             json_params = self.__read_file_data(template_params_file)
 
             # Get the params from the dict using a get()
-            extracted_params = json_params.get("parameters")
+            extracted_params: str = str(json_params.get("parameters"))
 
             # build properties
-            deployment_params = {
-                "mode": DeploymentMode.INCREMENTAL,
-                "template": json_template,
-                "parameters": extracted_params,
-            }
-
-            # Do the deployment
-            deploy_result = self.resource_client.deployments.begin_create_or_update(
-                self.resource_group_name,
-                deployment_name,
-                {"properties": deployment_params},  # type: ignore
+            deployment_params = self.__deployment_params(
+                json_template, extracted_params
             )
 
-            # get the status for the deployment
-            console_helper.print_command_message("**Deployment started **")
-            deployment_status = deploy_result.status()
-            while deployment_status == "InProgress":
-                console_helper.print_command_message("Deployment in progress..")
-                deployment_status = deploy_result.status()
-                time.sleep(3)
+            # do the deployment
+            self.__do_resource_deployment(deployment_name, deployment_params)
 
-            # print the result
-            print(f"Deployment result - {deploy_result.result()}")
+            # # Do the deployment
+            # deploy_result = self.resource_client.deployments.begin_create_or_update(
+            #     self.resource_group_name,
+            #     deployment_name,
+            #     {"properties": deployment_params},  # type: ignore
+            # )
+
+            # # get the status for the deployment
+            # console_helper.print_command_message("**Deployment started **")
+            # deployment_status = deploy_result.status()
+            # while deployment_status == "InProgress":
+            #     console_helper.print_command_message("Deployment in progress..")
+            #     deployment_status = deploy_result.status()
+            #     time.sleep(3)
+
+            # # print the result
+            # print(f"Deployment result - {deploy_result.result()}")
 
         else:
             console_helper.print_error_message(f"##ERROR - {template_file} not found>!")
@@ -158,3 +254,5 @@ class Deploy:
             Displays output status of the Resource group deployment.
         """
         self.resource_client.resource_groups.begin_delete(self.resource_group_name)
+
+    # ******************************************************************************** #
