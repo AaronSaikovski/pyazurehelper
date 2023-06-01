@@ -120,7 +120,7 @@ class Deploy:
     def __read_file_data(self, file_name: str) -> str:
         """
         Opens a given parameters file and returns a JSON string
-        """       
+        """
         json_data: str
 
         if os.path.isfile(file_name):
