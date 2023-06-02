@@ -2,6 +2,8 @@
 """ Checks to see if we are logged into the Azure CLI
 """
 from azure.cli.core import get_default_cli
+from azure.identity import AzureCliCredential
+from azure.mgmt.resource import ResourceManagementClient
 
 import pyazurehelper.az_subscription as az_sub
 import utils.console_helper as console_helper
@@ -17,7 +19,6 @@ def check_azure_login(subscription_id: str) -> None:
     Parameters
     ----------
     subscription_id : string
-        Azure Subscription ID
 
     Returns
     -------
@@ -46,6 +47,38 @@ def check_azure_login(subscription_id: str) -> None:
             az_cli.invoke(["account", "set", "--subscription", subscription_id])
     else:
         console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
+
+
+# ******************************************************************************** #
+
+
+def do_login(
+    subscription_id: str, credentials: AzureCliCredential
+) -> ResourceManagementClient:
+    """
+    Do the login
+
+    Parameters
+    ----------
+    subscription_id : string
+    credentials: AzureCliCredential
+
+    Returns
+    -------
+    nothing
+        Logs in if not logged on
+    """
+    # Check if SubscriptionID is valid
+    if az_sub.check_valid_subscription_id(subscription_id):
+        # Do login if not already
+        check_azure_login(subscription_id)
+
+        # Obtain the management object for resources.
+        resource_client = ResourceManagementClient(credentials, subscription_id)
+        return resource_client
+    else:
+        console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
+        return None  # type: ignore
 
 
 # ******************************************************************************** #

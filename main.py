@@ -71,7 +71,7 @@ def main() -> None:
     params_file = args.params
 
     # Call the deploy class
-    deploy = az_deploy.Deploy(subscription_id, resource_group_name, location)
+    deploy = az_deploy.DeploymentHelper(subscription_id, resource_group_name, location)
     deploy.deploy_resource_group()
 
     # deploy template

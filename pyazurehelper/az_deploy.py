@@ -9,15 +9,14 @@ from datetime import datetime
 
 from azure.core.polling import LROPoller
 from azure.identity import AzureCliCredential
-from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.resource.resources.models import DeploymentMode
 
 import pyazurehelper.az_login as az_login
-import pyazurehelper.az_subscription as az_sub
+import pyazurehelper.az_resourcegroup as az_rsg
 import utils.console_helper as console_helper
 
 
-class Deploy:
+class DeploymentHelper:
     """
     Main deployment class - Deploys Azure resources
     Perform the deployment of Azure resources
@@ -39,65 +38,36 @@ class Deploy:
         self.location = location
 
         # Do login
-        self.__do_login()
-        # # Check if SubscriptionID is valid
-        # if az_sub.check_valid_subscription_id(self.subscription_id):
-        #     # Do login if not already
-        #     az_login.check_azure_login(self.subscription_id)
-
-        #     # Obtain the management object for resources.
-        #     self.resource_client = ResourceManagementClient(
-        #         self.credentials, self.subscription_id
-        #     )
-        # else:
-        #     console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
+        self.resource_client = az_login.do_login(self.subscription_id, self.credentials)
 
     # ******************************************************************************** #
 
-    def __do_login(self) -> None:
-        """Logs in using the CLI
-        Parameters
-        ----------
-        None - Taken from class constructor.
-        """
-        # Check if SubscriptionID is valid
-        if az_sub.check_valid_subscription_id(self.subscription_id):
-            # Do login if not already
-            az_login.check_azure_login(self.subscription_id)
-
-            # Obtain the management object for resources.
-            self.resource_client = ResourceManagementClient(
-                self.credentials, self.subscription_id
-            )
-        else:
-            console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
-
-    # ******************************************************************************** #
-
-    def deploy_resource_group(self) -> None:
-        """Deploys a new Azure resource group
-        Parameters
-        ----------
-        None - Taken from class constructor.
-        """
-        rg_result = self.resource_client.resource_groups.create_or_update(
-            self.resource_group_name, {"location": self.location}  # type: ignore
-        )
-
-    # ******************************************************************************** #
-
-    def __deployment_params(self, template_data: dict, parameter_data: str) -> dict:
+    def __build_deployment_params(
+        self, template_data: dict, parameter_data: object
+    ) -> dict:
         """creates a new deployment params dict
         Parameters
         ----------
-        template_data: template payload
-        parameter_data: template parameters
+        template_data: template body
+        parameter_data: template body
         """
-        return {
-            "mode": DeploymentMode.INCREMENTAL,
-            "template": template_data,
-            "parameters": parameter_data,
-        }
+        deployment_params: dict
+
+        # we dont have function overloading in Py so this is the only option
+        # if we have parameters passed in, add them to the dict
+        if parameter_data is not None:
+            deployment_params = {
+                "mode": DeploymentMode.INCREMENTAL,
+                "template": template_data,
+                "parameters": parameter_data,
+            }
+        else:
+            deployment_params = {
+                "mode": DeploymentMode.INCREMENTAL,
+                "template": template_data,
+            }
+
+        return deployment_params
 
     # ******************************************************************************** #
 
@@ -130,13 +100,6 @@ class Deploy:
         template_data: template payload
         parameter_data: template parameters
         """
-        # # Do the deployment
-        # deploy_result = self.resource_client.deployments.begin_create_or_update(
-        #     self.resource_group_name,
-        #     deployment_name,
-        #     {"properties": deployment_params},  # type: ignore
-        # )
-
         # Do the deployment and get a result
         deploy_result = self.__deploy_resources(
             self.resource_group_name, deployment_name, deployment_params
@@ -183,44 +146,30 @@ class Deploy:
         today = datetime.now().strftime("%Y-%m-%d")
         deployment_name = f"{deploy_prefix}{today}"
 
+        # check if the resource exists..if not create it
+        self.deploy_resource_group()
+
         # check the file path exists
         if os.path.isfile(template_file):
             console_helper.print_command_message("**Deploying template **")
 
             # convert the template string to json
-            json_template = self.__read_file_data(template_file)
+            template_body = self.__read_file_data(template_file)
 
             # Load the param file as a string
-            json_params = self.__read_file_data(template_params_file)
+            params_body = self.__read_file_data(template_params_file)
 
             # Get the params from the dict using a get()
-            extracted_params: str = str(json_params.get("parameters"))
+            extracted_params = params_body.get("parameters")
 
             # build properties
-            deployment_params = self.__deployment_params(
-                json_template, extracted_params
+            deployment_params = self.__build_deployment_params(
+                template_body, extracted_params
             )
 
             # do the deployment
             self.__do_resource_deployment(deployment_name, deployment_params)
-
-            # # Do the deployment
-            # deploy_result = self.resource_client.deployments.begin_create_or_update(
-            #     self.resource_group_name,
-            #     deployment_name,
-            #     {"properties": deployment_params},  # type: ignore
-            # )
-
-            # # get the status for the deployment
-            # console_helper.print_command_message("**Deployment started **")
-            # deployment_status = deploy_result.status()
-            # while deployment_status == "InProgress":
-            #     console_helper.print_command_message("Deployment in progress..")
-            #     deployment_status = deploy_result.status()
-            #     time.sleep(3)
-
-            # # print the result
-            # print(f"Deployment result - {deploy_result.result()}")
+            console_helper.print_command_message("**Deployment completed. **")
 
         else:
             console_helper.print_error_message(f"##ERROR - {template_file} not found>!")
@@ -242,17 +191,24 @@ class Deploy:
 
     # ******************************************************************************** #
 
-    def destroy_resource_group(self) -> None:
-        """Destroys the Azure resource group
-        Parameters
-        ----------
-        taken from class constructor
-
-        Returns
-        -------
-        nothing
-            Displays output status of the Resource group deployment.
+    def deploy_resource_group(self):
         """
-        self.resource_client.resource_groups.begin_delete(self.resource_group_name)
+        creates a resource group..if it doesnt exist
+        """
+        if not az_rsg.get_resource_group(
+            self.resource_client, self.resource_group_name
+        ):
+            az_rsg.create_resource_group(
+                self.resource_client, self.resource_group_name, self.location
+            )
+
+    # ******************************************************************************** #
+
+    def destroy_resource_group(self):
+        """
+        Deletes a resource group if it exists
+        """
+        if az_rsg.get_resource_group(self.resource_client, self.resource_group_name):
+            az_rsg.delete_resource_group(self.resource_client, self.resource_group_name)
 
     # ******************************************************************************** #
