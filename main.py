@@ -58,7 +58,6 @@ def main() -> None:
     parser.add_argument(
         "--params", "-params", required=False, help="Resource Template Parameters file."
     )
-    # parser.add_argument('--Environment', '-env', required=False, help='Environment.')
     args = parser.parse_args()
 
     # ******************************************************************************** #
@@ -76,7 +75,6 @@ def main() -> None:
 
     # deploy template
     deploy.deploy_resource_template(template_file, params_file)
-    # deploy.destroy_resource_group()
 
     # ******************************************************************************** #
 

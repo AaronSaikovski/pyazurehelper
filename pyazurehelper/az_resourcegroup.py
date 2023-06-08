@@ -26,8 +26,8 @@ def create_resource_group(
     console_helper.print_command_message(
         f"Creating resource group - '{resource_group_name}'."
     )
-    rg_result = resource_client.resource_groups.create_or_update(
-        resource_group_name, {"location": location}  # type: ignore
+    resource_client.resource_groups.create_or_update(
+        resource_group_name, {"location": location}   
     )
 
 
@@ -76,24 +76,18 @@ def get_resource_group(
 # ******************************************************************************** #
 
 
-def list_resources(
-    resource_client: ResourceManagementClient,
-    resource_group_name: str,
-    filter: str = None,
-) -> object:
-    """List resources for a given resource group
-    Parameters
-    ----------
-    resource_client: ResourceManagementClient
-    resource_group_name: str
-    filter: str
+# def list_resources(
+#     resource_client: ResourceManagementClient,
+#     resource_group_name: str,
+# ) -> object:
+#     """List resources for a given resource group
+#     Parameters
+#     ----------
 
-    Returns
-    -------
-    bool resource group exists
-    """
-    # return resource_client.resource_groups.list_resources(resource_group_name, filter)
-    raise NotImplementedError("Method not implemented.")
+#     Returns
+#     -------
+#     bool resource group exists
+#     """
 
 
 # ******************************************************************************** #

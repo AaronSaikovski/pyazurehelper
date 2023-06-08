@@ -52,6 +52,26 @@ def check_azure_login(subscription_id: str) -> None:
 # ******************************************************************************** #
 
 
+# def do_login(
+#     subscription_id: str, credentials: AzureCliCredential
+# ) -> ResourceManagementClient:
+#     """
+#     Do the login
+
+#     Parameters
+#     ----------
+
+#     Returns
+#     -------
+#     nothing
+#         Logs in if not logged on
+#     """
+#     # Check if SubscriptionID is valid
+#     if az_sub.check_valid_subscription_id(subscription_id):
+#         # Do login if not already
+
+#         # Obtain the management object for resources.
+
 def do_login(
     subscription_id: str, credentials: AzureCliCredential
 ) -> ResourceManagementClient:
@@ -74,11 +94,9 @@ def do_login(
         check_azure_login(subscription_id)
 
         # Obtain the management object for resources.
-        resource_client = ResourceManagementClient(credentials, subscription_id)
-        return resource_client
-    else:
-        console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
-        return None  # type: ignore
+        return ResourceManagementClient(credentials, subscription_id)
+    return None
+       
 
 
 # ******************************************************************************** #

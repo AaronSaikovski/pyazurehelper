@@ -1,6 +1,8 @@
 isort
-black
+mypy
+ruff
 pytest
+pyinstaller
 azure-cli
 azure-cli-core
 azure-core

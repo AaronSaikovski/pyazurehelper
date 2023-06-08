@@ -80,14 +80,9 @@ class DeploymentHelper:
         template_data: template payload
         parameter_data: template parameters
         """
-        deploy_result: LROPoller
-        deploy_result = self.resource_client.deployments.begin_create_or_update(
-            self.resource_group_name,
-            deployment_name,
-            {"properties": deployment_params},  # type: ignore
+        return self.resource_client.deployments.begin_create_or_update(
+            self.resource_group_name, deployment_name, {"properties": deployment_params}
         )
-
-        return deploy_result
 
     # ******************************************************************************** #
 
@@ -176,18 +171,23 @@ class DeploymentHelper:
 
     # ******************************************************************************** #
 
+    # def __read_file_data(self, file_name: str) -> dict:
+    #     """
+    #     Opens a given parameters file and returns a JSON string
+    #     """
+
+    #     if os.path.isfile(file_name):
+    #         with open(file_name, "r") as file:
+
     def __read_file_data(self, file_name: str) -> dict:
         """
         Opens a given parameters file and returns a JSON string
         """
-        json_data: dict
-
         if os.path.isfile(file_name):
             with open(file_name, "r") as file:
-                json_data = json.load(file)
-            return json_data
+                return json.load(file)
         else:
-            return None  # type: ignore
+            return None
 
     # ******************************************************************************** #
 
