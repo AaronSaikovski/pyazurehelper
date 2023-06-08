@@ -74,20 +74,3 @@ def get_resource_group(
 
 
 # ******************************************************************************** #
-
-
-# def list_resources(
-#     resource_client: ResourceManagementClient,
-#     resource_group_name: str,
-# ) -> object:
-#     """List resources for a given resource group
-#     Parameters
-#     ----------
-
-#     Returns
-#     -------
-#     bool resource group exists
-#     """
-
-
-# ******************************************************************************** #
