@@ -11,8 +11,8 @@ from azure.core.polling import LROPoller
 from azure.identity import AzureCliCredential
 from azure.mgmt.resource.resources.models import DeploymentMode
 
-import pyazurehelper.az_login as az_login
-import pyazurehelper.az_resourcegroup as az_rsg
+import pyazuretoolkit.az_login as az_login
+import pyazuretoolkit.az_resourcegroup as az_rsg
 import utils.console_helper as console_helper
 
 

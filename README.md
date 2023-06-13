@@ -1,12 +1,12 @@
 <div align="center">
 
-# Python Azure Helper
+# Python Azure Toolkit Package
 
-A Python based helper package that assists platform and software engineers to work with Azure and the Azure Python SDK.
+A Python based Azure toolkit that that assists platform and DevOps engineers to work with Azure and the Azure Python SDK.
 
-[![Build Status](https://github.com/AaronSaikovski/pyazurehelper/workflows/build/badge.svg)](https://github.com/AaronSaikovski/pyazurehelper/actions)
-[![Coverage Status](https://coveralls.io/repos/github/AaronSaikovski/pyazurehelper/badge.svg?branch=main)](https://coveralls.io/github/AaronSaikovski/pyazurehelper?branch=main)
-[![Licence](https://img.shields.io/github/license/AaronSaikovski/pyazurehelper)](LICENSE)
+[![Build Status](https://github.com/AaronSaikovski/pyazuretoolkit/workflows/build/badge.svg)](https://github.com/AaronSaikovski/pyazuretoolkit/actions)
+[![Coverage Status](https://coveralls.io/repos/github/AaronSaikovski/pyazuretoolkit/badge.svg?branch=main)](https://coveralls.io/github/AaronSaikovski/pyazuretoolkit?branch=main)
+[![Licence](https://img.shields.io/github/license/AaronSaikovski/pyazuretoolkit)](LICENSE)
 
 </div>
 
