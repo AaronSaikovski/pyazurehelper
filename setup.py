@@ -1,43 +1,39 @@
-import setuptools
+from setuptools import find_packages, setup
 
-with open("README.md", "r") as fh:
+with open("app/README.md", "r") as fh:
     long_description = fh.read()
 
-REQUIREMENTS = [
-    # Add your list of production dependencies here, eg:
+REQUIREMENTS = [   
+    "azure-cli",
+    "azure-cli-core",
+    "azure-core",
+    "azure-identity",
+    "azure-common"
 ]
 
 DEV_REQUIREMENTS = [
-    "black == 23.*",
-    "build == 0.10.*",
-    "flake8 == 6.*",
-    "isort == 5.*",
-    "mypy == 1.2",
-    "pytest == 7.*",
-    "pytest-cov == 4.*",
-    "twine == 4.*",
+    "azure-cli",
+    "azure-cli-core",
+    "azure-core",
+    "azure-identity",
+    "azure-common"
+    "mypy",
+    "ruff",
+    "pytest"
 ]
 
-setuptools.setup(
-    name="PROJECT_NAME_URL",
-    version="0.1.0",
-    description="Your project description here",
+setup(
+    name="PyAzureToolkit",
+    version="0.0.1",
+    description="Python Azure Toolkit",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="http://github.com/USERNAME/PROJECT_NAME_URL",
-    author="USERNAME",
+    url="https://github.com/AaronSaikovski/pyazuretoolkit",
+    author="asaikovski",
+    author_email="asaikovski@outlook.com",
     license="MIT",
-    packages=setuptools.find_packages(
-        exclude=[
-            "examples",
-            "test",
-        ]
-    ),
-    package_data={
-        "project_name": [
-            "py.typed",
-        ]
-    },
+    package_dir={"": "app"},
+    packages=find_packages(where="app"),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -47,10 +43,5 @@ setuptools.setup(
     extras_require={
         "dev": DEV_REQUIREMENTS,
     },
-    entry_points={
-        "console_scripts": [
-            "PROJECT_NAME_URL=project_name.my_module:main",
-        ]
-    },
-    python_requires=">=3.7, <4",
+    python_requires=">=3.11",
 )

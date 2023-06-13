@@ -7,14 +7,14 @@ import os
 import time
 from datetime import datetime
 
+
 from azure.core.polling import LROPoller
 from azure.identity import AzureCliCredential
 from azure.mgmt.resource.resources.models import DeploymentMode
 
-import pyazuretoolkit.az_login as az_login
-import pyazuretoolkit.az_resourcegroup as az_rsg
 import utils.console_helper as console_helper
 
+from aztoolkit import az_login, az_resourcegroup
 
 class DeploymentHelper:
     """
@@ -171,14 +171,6 @@ class DeploymentHelper:
 
     # ******************************************************************************** #
 
-    # def __read_file_data(self, file_name: str) -> dict:
-    #     """
-    #     Opens a given parameters file and returns a JSON string
-    #     """
-
-    #     if os.path.isfile(file_name):
-    #         with open(file_name, "r") as file:
-
     def __read_file_data(self, file_name: str) -> dict:
         """
         Opens a given parameters file and returns a JSON string
@@ -195,10 +187,10 @@ class DeploymentHelper:
         """
         creates a resource group..if it doesnt exist
         """
-        if not az_rsg.get_resource_group(
+        if not az_resourcegroup.get_resource_group(
             self.resource_client, self.resource_group_name
         ):
-            az_rsg.create_resource_group(
+            az_resourcegroup.create_resource_group(
                 self.resource_client, self.resource_group_name, self.location
             )
 
@@ -208,7 +200,7 @@ class DeploymentHelper:
         """
         Deletes a resource group if it exists
         """
-        if az_rsg.get_resource_group(self.resource_client, self.resource_group_name):
-            az_rsg.delete_resource_group(self.resource_client, self.resource_group_name)
+        if az_resourcegroup.get_resource_group(self.resource_client, self.resource_group_name):
+            az_resourcegroup.delete_resource_group(self.resource_client, self.resource_group_name)
 
     # ******************************************************************************** #
