@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 """ Checks to see if we are logged into the Azure CLI
 """
-import az_subscription as az_sub
-from az_subscription import check_valid_subscription_id as az_sub
+
+
+
+from az_subscription  import  *
+from console_helper import *
+
 from azure.cli.core import get_default_cli
 from azure.identity import AzureCliCredential
 from azure.mgmt.resource import ResourceManagementClient
-from console_helper import print_confirmation_message as pc_msg
-from console_helper import print_error_message as pe_msg
-from console_helper import print_warning_message as pw_msg
 
 # ******************************************************************************** #
 
@@ -39,16 +40,16 @@ def check_azure_login(subscription_id: str) -> None:
         if account_response == 0:
             subscription_name: str = az_cli.result.result["name"]
             # pylint: disable=line-too-long
-            pc_msg.print_confirmation_message(
+            console_helper.print_confirmation_message(
                 f"Deploying: '{subscription_name}' with Id: '{subscription_id}'"
             )
         else:
             # pylint: disable=line-too-long
-            pe_msg.print_warning_message("Logging in to Azure CLI.")
+            console_helper.print_warning_message("Logging in to Azure CLI.")
             az_cli.invoke(["login"])
             az_cli.invoke(["account", "set", "--subscription", subscription_id])
     else:
-        pe_msg.print_error_message("##ERROR - Invalid SubscriptionID!")
+        console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
 
 
 # ******************************************************************************** #

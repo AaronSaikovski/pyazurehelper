@@ -7,9 +7,8 @@ import os
 import time
 from datetime import datetime
 
-# import az_login as az_login
 
-from pyazuretoolkit import az_login as az_login
+from az_login  import  *
 
 
 import az_resourcegroup as az_resourcegroup
@@ -84,7 +83,8 @@ class DeploymentHelper:
         parameter_data: template parameters
         """
         return self.resource_client.deployments.begin_create_or_update(
-            self.resource_group_name, deployment_name, {"properties": deployment_params} # type: ignore
+            self.resource_group_name, deployment_name, 
+            {"properties": deployment_params} 
         )
 
     # ******************************************************************************** #
@@ -203,7 +203,9 @@ class DeploymentHelper:
         """
         Deletes a resource group if it exists
         """
-        if az_resourcegroup.get_resource_group(self.resource_client, self.resource_group_name):
-            az_resourcegroup.delete_resource_group(self.resource_client, self.resource_group_name)
+        if az_resourcegroup.get_resource_group(self.resource_client, 
+                                               self.resource_group_name):
+            az_resourcegroup.delete_resource_group(self.resource_client, 
+                                                   self.resource_group_name)
 
     # ******************************************************************************** #

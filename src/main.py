@@ -1,14 +1,11 @@
-#!/usr/bin/env python3
+
 """ A python script to deploy an Azure Bicep or ARM Template.
 """
 import argparse
 import sys
 
-# import pyazuretoolkit.az_deploy as az_deploy
-# import pyazuretoolkit.console_helper as console_helper
-
-
 from pyazuretoolkit import *
+
 
 def main() -> None:
     """Main function.
