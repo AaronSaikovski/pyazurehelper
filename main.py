@@ -3,17 +3,10 @@
 """
 import argparse
 import sys
-from app.aztoolkit import az_deploy
-#from pyazuretoolkit import az_deploy
-
-# import pyazuretoolkit.az_deploy as az_deploy
-
-#from pyazuretoolkit import *
 
 
-
+import pyazuretoolkit.az_deploy as az_deploy
 import utils.console_helper as console_helper
-
 
 def main() -> None:
     """Main function.

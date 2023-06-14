@@ -7,14 +7,14 @@ import os
 import time
 from datetime import datetime
 
-
+import utils.console_helper
 from azure.core.polling import LROPoller
 from azure.identity import AzureCliCredential
 from azure.mgmt.resource.resources.models import DeploymentMode
 
-import utils.console_helper as console_helper
+import pyazuretoolkit.az_login as az_login
+import pyazuretoolkit.az_resourcegroup as az_resourcegroup
 
-from aztoolkit import az_login, az_resourcegroup
 
 class DeploymentHelper:
     """
@@ -81,7 +81,7 @@ class DeploymentHelper:
         parameter_data: template parameters
         """
         return self.resource_client.deployments.begin_create_or_update(
-            self.resource_group_name, deployment_name, {"properties": deployment_params}
+            self.resource_group_name, deployment_name, {"properties": deployment_params} # type: ignore
         )
 
     # ******************************************************************************** #
@@ -179,11 +179,11 @@ class DeploymentHelper:
             with open(file_name, "r") as file:
                 return json.load(file)
         else:
-            return None
+            return None # type: ignore
 
     # ******************************************************************************** #
 
-    def deploy_resource_group(self):
+    def deploy_resource_group(self) -> None:
         """
         creates a resource group..if it doesnt exist
         """
@@ -196,7 +196,7 @@ class DeploymentHelper:
 
     # ******************************************************************************** #
 
-    def destroy_resource_group(self):
+    def destroy_resource_group(self) -> None:
         """
         Deletes a resource group if it exists
         """

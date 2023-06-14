@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 """ Checks to see if we are logged into the Azure CLI
 """
-import aztoolkit.az_subscription as az_sub
+import utils.console_helper as console_helper
 from azure.cli.core import get_default_cli
 from azure.identity import AzureCliCredential
 from azure.mgmt.resource import ResourceManagementClient
 
-import utils.console_helper as console_helper
+import pyazuretoolkit.az_subscription as az_sub
 
 # ******************************************************************************** #
 

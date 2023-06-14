@@ -1,9 +1,8 @@
 """
 Resource group helper
 """
-from azure.mgmt.resource import ResourceManagementClient
-
 import utils.console_helper as console_helper
+from azure.mgmt.resource import ResourceManagementClient
 
 # ******************************************************************************** #
 
