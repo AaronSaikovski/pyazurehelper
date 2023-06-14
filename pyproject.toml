@@ -1,3 +1,22 @@
+[project]
+name = "pyazuretoolkit"
+version = "0.0.1"
+authors = [
+  { name="Aaron Saikovski", email="asaikovski@outlook.com" },
+]
+description = "An Azure Python toolkit."
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/AaronSaikovski/pyazuretoolkit"
+"Bug Tracker" = "https://github.com/AaronSaikovski/pyazuretoolkit/issues"
+
 [tool.ruff] 
 extend-select = [
     "B",

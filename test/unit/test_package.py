@@ -1,4 +1,4 @@
-import pyazuretoolkit.az_subscription as az_sub
+import pyazuretoolkitaz_subscription as az_sub
 
 
 def test_main():

@@ -7,13 +7,9 @@ import os
 import time
 from datetime import datetime
 
-import utils.console_helper
 from azure.core.polling import LROPoller
 from azure.identity import AzureCliCredential
 from azure.mgmt.resource.resources.models import DeploymentMode
-
-import pyazuretoolkit.az_login as az_login
-import pyazuretoolkit.az_resourcegroup as az_resourcegroup
 
 
 class DeploymentHelper:
