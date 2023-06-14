@@ -4,9 +4,11 @@
 import argparse
 import sys
 
-import pyazuretoolkit.az_deploy as az_deploy
-import pyazuretoolkit.console_helper as console_helper
+# import pyazuretoolkit.az_deploy as az_deploy
+# import pyazuretoolkit.console_helper as console_helper
 
+
+from pyazuretoolkit import *
 
 def main() -> None:
     """Main function.
