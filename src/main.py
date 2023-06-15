@@ -1,12 +1,13 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3  # noqa: INP001
 """ A python script to deploy an Azure Bicep or ARM Template.
 """
-
 import argparse
 import sys
 
-import pyazuretoolkit.az_deploy as az_deploy
-import utils.console_helper as console_helper
+from pyazuretoolkit import (
+    az_deploy,
+    console_helper,
+)
 
 
 def main() -> None:
@@ -21,6 +22,7 @@ def main() -> None:
 
     # Check if we are running in a virtual environment
     if sys.prefix == sys.base_prefix:
+
         console_helper.print_error_message("** This is not a virtual environment! **")
         console_helper.print_command_message(
             "Run the following command to create a virtual environment"

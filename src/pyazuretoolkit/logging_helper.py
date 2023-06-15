@@ -10,7 +10,6 @@ logger = logging.getLogger()
 
 # ******************************************************************************** #
 
-
 def log(func):
     """
     Logging decorator

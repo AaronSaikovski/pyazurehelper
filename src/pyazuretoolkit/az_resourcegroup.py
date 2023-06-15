@@ -3,7 +3,9 @@ Resource group helper
 """
 from azure.mgmt.resource import ResourceManagementClient
 
-import utils.console_helper as console_helper
+from .console_helper import (
+    print_command_message,
+)
 
 # ******************************************************************************** #
 
@@ -23,7 +25,7 @@ def create_resource_group(
     nothing
         Displays output status of the Resource group deployment.
     """
-    console_helper.print_command_message(
+    print_command_message(
         f"Creating resource group - '{resource_group_name}'."
     )
     resource_client.resource_groups.create_or_update(
@@ -48,7 +50,7 @@ def delete_resource_group(
     nothing
         Displays output status of the Resource group deployment.
     """
-    console_helper.print_command_message(
+    print_command_message(
         f"Deleting resource group - '{resource_group_name}'."
     )
     resource_client.resource_groups.begin_delete(resource_group_name)

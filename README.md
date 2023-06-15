@@ -20,8 +20,8 @@ This program is for working with Azure and its resource and authentication provi
 
 ### Software Requirements
 
-- Python 3.10.10 or later
-- pip 23.0.1 or later
+- Python 3.11.x or later
+- pip3 or later
 - Azure CLI tools 2.48.1 or later
 - Python virtual environment and packages as specified in requirements.txt.
 
