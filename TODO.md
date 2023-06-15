@@ -5,6 +5,7 @@
 - [ ] update readme
 - [ ] add ability to take .bicep file and convert to json for passing to API
 - [ ] Add more unit tests
+- [ ]  Add more robust error handling
 
 ### In Progress
 

@@ -2,14 +2,16 @@
 """ Checks to see if we are logged into the Azure CLI
 """
 
-
-
-from az_subscription  import  *
-from console_helper import *
-
 from azure.cli.core import get_default_cli
 from azure.identity import AzureCliCredential
 from azure.mgmt.resource import ResourceManagementClient
+
+from .az_subscription import check_valid_sub_id
+from .console_helper import (
+    print_confirmation_message,
+    print_error_message,
+    print_warning_message,
+)
 
 # ******************************************************************************** #
 
@@ -29,7 +31,7 @@ def check_azure_login(subscription_id: str) -> None:
         Logs in if not logged on
     """
     # Check if Subscription is valid
-    if az_sub.check_valid_subscription_id(subscription_id):
+    if check_valid_sub_id(subscription_id):
         # get the cli instance
         az_cli = get_default_cli()
 
@@ -40,16 +42,16 @@ def check_azure_login(subscription_id: str) -> None:
         if account_response == 0:
             subscription_name: str = az_cli.result.result["name"]
             # pylint: disable=line-too-long
-            console_helper.print_confirmation_message(
+            print_confirmation_message(
                 f"Deploying: '{subscription_name}' with Id: '{subscription_id}'"
             )
         else:
             # pylint: disable=line-too-long
-            console_helper.print_warning_message("Logging in to Azure CLI.")
+            print_warning_message("Logging in to Azure CLI.")
             az_cli.invoke(["login"])
             az_cli.invoke(["account", "set", "--subscription", subscription_id])
     else:
-        console_helper.print_error_message("##ERROR - Invalid SubscriptionID!")
+        print_error_message("##ERROR - Invalid SubscriptionID!")
 
 
 # ******************************************************************************** #
@@ -71,7 +73,7 @@ def do_login(
         Logs in if not logged on
     """
     # Check if SubscriptionID is valid
-    if az_sub.check_valid_subscription_id(subscription_id):
+    if check_valid_sub_id(subscription_id):
         # Do login if not already
         check_azure_login(subscription_id)
 

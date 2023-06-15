@@ -7,15 +7,22 @@ import os
 import time
 from datetime import datetime
 
-
-from az_login  import  *
-
-
-import az_resourcegroup as az_resourcegroup
-import console_helper as console_helper
 from azure.core.polling import LROPoller
 from azure.identity import AzureCliCredential
 from azure.mgmt.resource.resources.models import DeploymentMode
+
+from .az_login import (
+    do_login,
+)
+from .az_resourcegroup import (
+    create_resource_group,
+    delete_resource_group,
+    get_resource_group,
+)
+from .console_helper import (
+    print_command_message,
+    print_error_message,
+)
 
 
 class DeploymentHelper:
@@ -40,7 +47,7 @@ class DeploymentHelper:
         self.location = location
 
         # Do login
-        self.resource_client = az_login.do_login(self.subscription_id, self.credentials)
+        self.resource_client = do_login(self.subscription_id, self.credentials)
 
     # ******************************************************************************** #
 
@@ -104,10 +111,10 @@ class DeploymentHelper:
         )
 
         # get the status for the deployment
-        console_helper.print_command_message("**Deployment started **")
+        print_command_message("**Deployment started **")
         deployment_status = deploy_result.status()
         while deployment_status == "InProgress":
-            console_helper.print_command_message("Deployment in progress..")
+            print_command_message("Deployment in progress..")
             deployment_status = deploy_result.status()
             time.sleep(3)
 
@@ -149,7 +156,7 @@ class DeploymentHelper:
 
         # check the file path exists
         if os.path.isfile(template_file):
-            console_helper.print_command_message("**Deploying template **")
+            print_command_message("**Deploying template **")
 
             # convert the template string to json
             template_body = self.__read_file_data(template_file)
@@ -167,10 +174,10 @@ class DeploymentHelper:
 
             # do the deployment
             self.__do_resource_deployment(deployment_name, deployment_params)
-            console_helper.print_command_message("**Deployment completed. **")
+            print_command_message("**Deployment completed. **")
 
         else:
-            console_helper.print_error_message(f"##ERROR - {template_file} not found>!")
+            print_error_message(f"##ERROR - {template_file} not found>!")
 
     # ******************************************************************************** #
 
@@ -182,7 +189,7 @@ class DeploymentHelper:
             with open(file_name, "r") as file:
                 return json.load(file)
         else:
-            return None # type: ignore
+            return None
 
     # ******************************************************************************** #
 
@@ -190,10 +197,10 @@ class DeploymentHelper:
         """
         creates a resource group..if it doesnt exist
         """
-        if not az_resourcegroup.get_resource_group(
+        if not get_resource_group(
             self.resource_client, self.resource_group_name
         ):
-            az_resourcegroup.create_resource_group(
+            create_resource_group(
                 self.resource_client, self.resource_group_name, self.location
             )
 
@@ -203,9 +210,9 @@ class DeploymentHelper:
         """
         Deletes a resource group if it exists
         """
-        if az_resourcegroup.get_resource_group(self.resource_client, 
+        if get_resource_group(self.resource_client, 
                                                self.resource_group_name):
-            az_resourcegroup.delete_resource_group(self.resource_client, 
+            delete_resource_group(self.resource_client, 
                                                    self.resource_group_name)
 
     # ******************************************************************************** #

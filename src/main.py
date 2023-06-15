@@ -1,10 +1,13 @@
-
+#!/usr/bin/env python3  # noqa: INP001
 """ A python script to deploy an Azure Bicep or ARM Template.
 """
 import argparse
 import sys
 
-from pyazuretoolkit import *
+from pyazuretoolkit import (
+    az_deploy,
+    console_helper,
+)
 
 
 def main() -> None:
