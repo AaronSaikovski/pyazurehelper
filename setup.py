@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-with open("app/README.md", "r") as fh:
+with open("README.md", "r") as fh:
     long_description = fh.read()
 
 REQUIREMENTS = [   
@@ -32,8 +32,8 @@ setup(
     author="asaikovski",
     author_email="asaikovski@outlook.com",
     license="MIT",
-    package_dir={"": "app"},
-    packages=find_packages(where="app"),
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

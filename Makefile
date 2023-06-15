@@ -20,7 +20,7 @@ create: requirements.txt
 	$(PIP) install --upgrade pip
 
 ## activate - Activate the virtual environment
-activate: create
+activate: 
 	. ./venv/bin/activate
 
 ## run - run the script
@@ -37,7 +37,8 @@ clean:
 	rm -rf ./build
 	rm -rf .ruff_cache
 	rm -rf .mypy_cache
-	
+	rm -rf ./src/dist
+	rm -rf ./src/build
 	
 ## freeze - freeze the environment to requirements.txt
 freeze: activate

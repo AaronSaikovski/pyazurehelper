@@ -10,9 +10,6 @@ A Python based Azure toolkit that that assists platform and DevOps engineers to 
 
 </div>
 
-Version History:
-
-- 1.0 - Initial version release
 
 ### Description
 
