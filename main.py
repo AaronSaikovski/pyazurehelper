@@ -1,17 +1,17 @@
-#!/usr/bin/env python3  # noqa: INP001
+#!/usr/bin/env python3  
 """ A python script to deploy an Azure Bicep or ARM Template.
 """
 import argparse
 import sys
 
-from pyazuretoolkit import (
+from src.pyazuretoolkit import (
     az_deploy,
     console_helper,
 )
 
 
 def main() -> None:
-    """Main function.
+    """Main function
 
     Returns
     -------
@@ -84,3 +84,4 @@ def main() -> None:
 # Main check
 if __name__ == "__main__":
     main()
+
