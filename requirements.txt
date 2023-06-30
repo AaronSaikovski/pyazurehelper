@@ -1,9 +1,0 @@
-mypy
-ruff
-pytest
-azure-cli
-azure-cli-core
-azure-core
-azure-identity
-azure-common
-pyinstaller
