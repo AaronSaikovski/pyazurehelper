@@ -30,7 +30,7 @@ show-fixes = true
 target-version = "py311"
 [tool.poetry]
 name = "pyazuretooklit"
-version = "1.0.0"
+version = "0.1.0"
 description = "Python Azure Toolkit Package"
 authors = ["Aaron Saikovski <asaikovski@outlook.com>"]
 license = "MIT"

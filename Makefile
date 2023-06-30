@@ -18,14 +18,15 @@ help:
 create: 
 	poetry config virtualenvs.in-project true
 	poetry init --name=$(PROJECT_NAME) --description=$(PROJECT_DESC) --author=$(PROJECT_AUTHOR) --python=$(PROJECT_PYTHON_VER) --license=$(PROJECT_LICENSE) --no-interaction 
-	poetry update
 	poetry add --dev pytest pytest-cov black ruff ruff bandit safety pyinstaller
 	poetry add azure-cli azure-cli-core azure-core azure-identity azure-common
+	poetry update
 
 ## deps - Install the dependencies 
 deps: 
 	poetry add --dev pytest pytest-cov black ruff ruff bandit safety pyinstaller
 	poetry add azure-cli azure-cli-core azure-core azure-identity azure-common
+	poetry update
 
 ## activate - Activates the virtual environment
 activate: 
@@ -34,6 +35,7 @@ activate:
 ## install - installs the poetry environment with dependencies
 install: 
 	poetry install
+	poetry update
 
 ## run - Run the script main.py
 run:  activate
@@ -54,7 +56,7 @@ clean:
 
 ## test - Tests the project
 test: activate
-	poetry run python -m pytest tests
+	poetry run python -m pytest ./src/tests
 
 ## lint - Lints the project using ruff --fix
 lint: activate
